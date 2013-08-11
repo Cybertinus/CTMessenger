@@ -19,12 +19,4 @@ mainWindow::mainWindow()
 {
     CTMessenger *ctmessenger = new CTMessenger();
 	setCentralWidget(ctmessenger);
-
-	/*
-	QWidget *widget = new QWidget
-	QVBoxLayout *layout = new QVBoxLayout;
-	layout->addWidget(ctmessenger);
-	widget->setLayout(layout);
-    setCentralWidget(widget);
-	*/
 }
