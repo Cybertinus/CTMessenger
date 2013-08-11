@@ -47,7 +47,17 @@ NewMessage::NewMessage(QWidget *parent)
 
 void NewMessage::send()
 {
+	connect(&client, SIGNAL(connected()), this, SLOT(sendMessage()));
+	client.connectToHost(toLineEdit->text(), 1337);
 	accept();
+}
+
+void NewMessage::sendMessage()
+{
+	QString messageText = messageTextEdit->toPlainText();
+	messageText.append("\n");
+	client.write(messageText.toUtf8());
+	client.close();
 }
 
 void NewMessage::cancel()

@@ -18,13 +18,13 @@ CTMessenger::CTMessenger(QWidget *parent)
 	: QWidget(parent)
 {
 	QLabel *fromLabel = new QLabel(tr("From:"));
-	QLabel *fromText = new QLabel("");
-	fromText->setMinimumWidth(50);
+	fromText = new QLabel("");
+	fromText->setMinimumWidth(100);
 
 	QLabel *messageLabel = new QLabel(tr("Message:"));
-	QLabel *messageText = new QLabel("");
-	messageText->setMinimumWidth(50);
-	messageText->setMinimumHeight(100);
+	messageText = new QLabel("");
+	messageText->setMinimumWidth(100);
+	messageText->setMinimumHeight(200);
 
 	newMessageButton = new QPushButton(tr("New message"));
 	connect(newMessageButton, SIGNAL(clicked()), this, SLOT(newMessage()));
@@ -38,6 +38,18 @@ CTMessenger::CTMessenger(QWidget *parent)
 
 	setLayout(mainLayout);
 	setWindowTitle("CTMessenger");
+
+	tcpServer = new QTcpServer(this);
+	if(!tcpServer->listen(QHostAddress::Any, 1337))
+	{
+		QMessageBox::critical(this, tr("CTMessenger"),
+		                      tr("Unable to start the server: %1.")
+							  .arg(tcpServer->errorString()));
+		close();
+		exit(1);
+	}
+	connect(tcpServer, SIGNAL(newConnection()), this, SLOT(recieveConnection()));
+	blocksize = 0;
 }
 
 void CTMessenger::newMessage()
@@ -45,4 +57,25 @@ void CTMessenger::newMessage()
 	newMessageWindow = new NewMessage();
 	newMessageWindow->show();
 	newMessageWindow->exec();
+}
+
+void CTMessenger::recieveConnection()
+{
+	clientConnection = tcpServer->nextPendingConnection();
+	connect(clientConnection, SIGNAL(disconnected()), clientConnection, SLOT(deleteLater()));
+	connect(clientConnection, SIGNAL(readyRead()), this, SLOT(recieveMessage()));
+}
+
+void CTMessenger::recieveMessage()
+{
+	QString incomingMessage = "";
+	while(clientConnection->canReadLine())
+	{
+		incomingMessage.append(clientConnection->readLine());
+	}
+
+	fromText->setText(clientConnection->peerAddress().toString());
+	messageText->setText(incomingMessage);
+
+	clientConnection->close();
 }

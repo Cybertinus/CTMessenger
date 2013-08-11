@@ -13,6 +13,8 @@
  */
 
 #include <QtGui>
+#include <QtNetwork>
+#include <QTcpSocket>
 
 class NewMessage : public QDialog
 {
@@ -24,6 +26,7 @@ public:
 public slots:
 	void send();
 	void cancel();
+	void sendMessage();
 
 private:
 	QLineEdit *toLineEdit;
@@ -31,4 +34,5 @@ private:
 
 	QPushButton *sendButton;
 	QPushButton *cancelButton;
+	QTcpSocket client;
 };

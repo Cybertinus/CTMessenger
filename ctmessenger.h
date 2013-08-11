@@ -24,8 +24,15 @@ public:
 
 public slots:
 	void newMessage();
+	void recieveConnection();
+	void recieveMessage();
 
 private:
+	QLabel *fromText;
+	QLabel *messageText;
 	QPushButton *newMessageButton;
 	NewMessage *newMessageWindow;
+	QTcpServer *tcpServer;
+	QTcpSocket *clientConnection;
+	int blocksize;
 };
