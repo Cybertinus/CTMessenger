@@ -12,14 +12,14 @@
  * =====================================================================================
  */
 
-#include "ctmessenger.h"
+#include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
 
-	CTMessenger ctmessenger;
-	ctmessenger.show();
+	mainWindow mainwindow;
+	mainwindow.show();
 
 	return app.exec();
 }

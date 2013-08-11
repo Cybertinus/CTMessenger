@@ -10,5 +10,5 @@ INCLUDEPATH += .
 QT += network
 
 # Input
-HEADERS += ctmessenger.h newmessage.h
-SOURCES += ctmessenger.cpp main.cpp newmessage.cpp
+HEADERS += mainwindow.h ctmessenger.h newmessage.h
+SOURCES += mainwindow.cpp ctmessenger.cpp main.cpp newmessage.cpp
