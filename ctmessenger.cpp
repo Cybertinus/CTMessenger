@@ -28,13 +28,9 @@ CTMessenger::CTMessenger(QWidget *parent)
 	messageText->setMinimumHeight(200);
 	messageText->setReadOnly(true);
 
-	newMessageButton = new QPushButton(tr("New message"));
-	connect(newMessageButton, SIGNAL(clicked()), this, SLOT(newMessage()));
-
 	QGridLayout *mainLayout = new QGridLayout;
 	mainLayout->addWidget(fromLabel, 0, 0);
 	mainLayout->addWidget(fromText, 0, 1);
-	mainLayout->addWidget(newMessageButton, 0, 2);
 	mainLayout->addWidget(messageLabel, 1, 0, Qt::AlignTop);
 	mainLayout->addWidget(messageText, 1, 1);
 

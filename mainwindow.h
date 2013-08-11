@@ -20,4 +20,8 @@ class mainWindow : public QMainWindow
     
 public:
     mainWindow();
+
+public slots:
+	void quit();
+	void showAboutQt();
 };   

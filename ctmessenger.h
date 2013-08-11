@@ -30,7 +30,6 @@ public slots:
 private:
 	QLineEdit *fromText;
 	QTextEdit *messageText;
-	QPushButton *newMessageButton;
 	NewMessage *newMessageWindow;
 	QTcpServer *tcpServer;
 	QTcpSocket *clientConnection;
