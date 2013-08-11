@@ -28,8 +28,8 @@ public slots:
 	void recieveMessage();
 
 private:
-	QLabel *fromText;
-	QLabel *messageText;
+	QLineEdit *fromText;
+	QTextEdit *messageText;
 	QPushButton *newMessageButton;
 	NewMessage *newMessageWindow;
 	QTcpServer *tcpServer;

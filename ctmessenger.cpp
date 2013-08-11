@@ -18,13 +18,15 @@ CTMessenger::CTMessenger(QWidget *parent)
 	: QWidget(parent)
 {
 	QLabel *fromLabel = new QLabel(tr("From:"));
-	fromText = new QLabel("");
+	fromText = new QLineEdit();
 	fromText->setMinimumWidth(100);
+	fromText->setReadOnly(true);
 
 	QLabel *messageLabel = new QLabel(tr("Message:"));
-	messageText = new QLabel("");
+	messageText = new QTextEdit();
 	messageText->setMinimumWidth(100);
 	messageText->setMinimumHeight(200);
+	messageText->setReadOnly(true);
 
 	newMessageButton = new QPushButton(tr("New message"));
 	connect(newMessageButton, SIGNAL(clicked()), this, SLOT(newMessage()));
