@@ -7,7 +7,7 @@
  *
  *         Author:  Cybertinus
  *
- *        Licence:  BSD
+ *        Licence:  BSD, see LICENCE for more info
  * =====================================================================================
  */
 
