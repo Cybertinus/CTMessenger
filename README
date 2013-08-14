@@ -1,0 +1,25 @@
+CTMessenger - a simple Qt based messenger
+
+The purpose of this program is to have a very simple application running on
+every machine in your LAN to make it very easy to relay simple messages.
+The idea for this program comes from the Windows 98 program called WinPopup.
+WinPopup was also used for simple, small messages over the local LAN. In modern
+Windows versions (Windows 7 and 8) the core functionality is still available,
+the famous 'net send'. But WinPopup also had a GUI, and I wanted that too, so
+I created CTMessenger. But with a twist to make it a bit more easily to use
+(I think/hope)
+
+The program opens a TCP and a UDP socket, both on port 1337. The TCP port is
+used for the actual messages that are send from computer to computer. The UDP
+port is used for keep-alive kind of messages. Every minute CTMessenger
+broadcasts that it is still alive. Other instances receive those broadcasts
+mark the corresponding host as up and add it to the list of possible computers
+you can send an message to. If the last keep-alive message was received a few
+minutes ago, the computer is removed from the list. Also when a 'down' message
+is broadcasted, the computer is removed from the list.
+
+Please note: this application is intended for use in small, fully trusted LANs
+like home situations. There is little to no security in place. The messages are
+send in plain text (no SSL encryption) and there is no protection against mass
+messaging. In other words: only use in a small LAN environment, where you can
+physically smack the person who is abusing this problem ;).
