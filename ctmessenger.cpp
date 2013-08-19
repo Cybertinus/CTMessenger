@@ -37,6 +37,7 @@ CTMessenger::CTMessenger(QWidget *parent)
 	setLayout(mainLayout);
 	setWindowTitle("CTMessenger");
 
+	// Start the TCP Server, to recieve new messages
 	tcpServer = new QTcpServer(this);
 	if(!tcpServer->listen(QHostAddress::Any, 1337))
 	{
@@ -47,7 +48,19 @@ CTMessenger::CTMessenger(QWidget *parent)
 		exit(1);
 	}
 	connect(tcpServer, SIGNAL(newConnection()), this, SLOT(recieveConnection()));
-	blocksize = 0;
+
+	// Set up the UDP socket, to recieve maintenance broadcasts
+	broadcastListener = new QUdpSocket(this);
+	broadcastListener->bind(1337, QUdpSocket::ShareAddress);
+	connect(broadcastListener, SIGNAL(readyRead()), this, SLOT(recieveBroadcast()));
+
+	// Set up the UDP socket for sending maintenance broadcasts
+	broadcastSender = new QUdpSocket(this);
+
+	// Send the maintenance broadcasts every minute
+	broadcastTimer = new QTimer(this);
+	connect(broadcastTimer, SIGNAL(timeout()), this, SLOT(sendBroadcast()));
+	sendBroadcast();
 }
 
 void CTMessenger::newMessage()
@@ -76,4 +89,48 @@ void CTMessenger::recieveMessage()
 	messageText->setText(incomingMessage);
 
 	clientConnection->close();
+}
+
+void CTMessenger::recieveBroadcast()
+{
+	while(broadcastListener->hasPendingDatagrams())
+	{
+		QByteArray datagram;
+		QHostAddress sourceAddress;
+		datagram.resize(broadcastListener->pendingDatagramSize());
+		broadcastListener->readDatagram(datagram.data(), datagram.size(), &sourceAddress);
+		QString broadcastdata = datagram.data();
+		QStringList dataparts = broadcastdata.split(',');
+		bool foundpc = false;
+		for(int i = 0; i < localpcs.size(); ++i)
+		{
+			if(localpcs.at(i)->name == dataparts.at(1))
+			{
+				foundpc = true;
+				if(dataparts.at(0) == "DOWN")
+				{
+					localpcs.removeAt(i);
+				}
+				else if(dataparts.at(0) == "UP")
+				{
+					localpcs.at(i)->lastseen = QDateTime::currentDateTime();
+				}
+			}
+		}
+
+		if(foundpc == false && dataparts.at(0) == "UP")
+		{
+			pc newpc;
+			newpc.name = dataparts.at(1);
+			newpc.lastseen = QDateTime::currentDateTime();
+			newpc.ipaddr = sourceAddress.toString();
+			localpcs.append(&newpc);
+		}
+	}
+}
+
+void CTMessenger::sendBroadcast()
+{
+	QByteArray datagram = "UP,cybertinus";
+	broadcastSender->writeDatagram(datagram.data(), datagram.size(), QHostAddress::Broadcast, 1337);
 }

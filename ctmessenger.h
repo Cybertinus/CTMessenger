@@ -13,6 +13,8 @@
  */
 
 #include <QtGui>
+#include <QtNetwork>
+#include <QUdpSocket>
 #include "newmessage.h"
 
 class CTMessenger : public QWidget
@@ -26,12 +28,23 @@ public slots:
 	void newMessage();
 	void recieveConnection();
 	void recieveMessage();
+	void recieveBroadcast();
+	void sendBroadcast();
 
 private:
+	struct pc {
+		QString name;
+		QDateTime lastseen;
+		QString ipaddr;
+	};
+	
+	QList<pc *> localpcs;
 	QLineEdit *fromText;
 	QTextEdit *messageText;
 	NewMessage *newMessageWindow;
 	QTcpServer *tcpServer;
 	QTcpSocket *clientConnection;
-	int blocksize;
+	QUdpSocket *broadcastListener;
+	QUdpSocket *broadcastSender;
+	QTimer *broadcastTimer;
 };
