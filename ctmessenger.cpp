@@ -60,7 +60,10 @@ CTMessenger::CTMessenger(QWidget *parent)
 	// Send the maintenance broadcasts every minute
 	broadcastTimer = new QTimer(this);
 	connect(broadcastTimer, SIGNAL(timeout()), this, SLOT(sendBroadcast()));
+	broadcastTimer->start(60000);
 	sendBroadcast();
+
+	this->localpcs = QList<pc *> ();
 }
 
 void CTMessenger::newMessage()
